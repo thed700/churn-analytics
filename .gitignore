@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+
+# Data — never commit raw data to GitHub
+data/raw/
+data/processed/
+*.csv
+*.parquet
+*.xlsx
+
+# Models — large binary files
+models/
+*.pkl
+*.joblib
+*.cbm
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs
+logs/
+*.log
+
+# Reports / figures (generated)
+reports/figures/
+reports/*.csv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Optuna / MLflow
+optuna.db
+mlruns/
+
+# Kaggle credentials
+kaggle.json
+.kaggle/

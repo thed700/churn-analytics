@@ -1,0 +1,79 @@
+project:
+  name: "Customer Churn Intelligence System"
+  version: "1.0.0"
+  author: "Akmal"
+  github: "thed700"
+
+paths:
+  raw_data: "data/raw/telco_churn.csv"
+  processed_data: "data/processed/churn_features.parquet"
+  models_dir: "models/"
+  reports_dir: "reports/figures/"
+
+data:
+  target_col: "Churn"
+  customer_id_col: "customerID"
+  test_size: 0.2
+  random_state: 42
+  stratify: true
+
+features:
+  numerical:
+    - tenure
+    - MonthlyCharges
+    - TotalCharges
+  categorical:
+    - Contract
+    - PaymentMethod
+    - InternetService
+    - TechSupport
+    - OnlineSecurity
+    - StreamingTV
+    - StreamingMovies
+  engineered:
+    - charge_volatility_ratio
+    - service_adoption_density
+    - tenure_contract_interaction
+    - support_recency_decay
+    - cohort_clv_percentile
+
+model:
+  lgbm:
+    n_estimators: 500
+    learning_rate: 0.05
+    max_depth: 6
+    num_leaves: 31
+    min_child_samples: 20
+    subsample: 0.8
+    colsample_bytree: 0.8
+    scale_pos_weight: 3.0      # handles class imbalance
+    random_state: 42
+    n_jobs: -1
+  catboost:
+    iterations: 500
+    learning_rate: 0.05
+    depth: 6
+    random_seed: 42
+    verbose: 0
+  cv:
+    n_splits: 5
+    shuffle: true
+    random_state: 42
+
+evaluation:
+  threshold: 0.40              # recall-optimized, not default 0.5
+  beta: 2.0                    # F-beta: recall 2x more important than precision
+  cost_fn: 500                 # avg CLV — cost of missing a churner ($)
+  cost_fp: 50                  # retention offer cost ($)
+
+optuna:
+  n_trials: 150
+  timeout: 600
+  direction: "maximize"
+  metric: "f2_score"
+
+dashboard:
+  host: "0.0.0.0"
+  port: 8050
+  debug: false
+  update_interval: 30000       # ms
